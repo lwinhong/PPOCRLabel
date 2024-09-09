@@ -61,7 +61,6 @@ from PyQt5.QtWidgets import (
     QComboBox,
     QDialog,
     QAbstractItemView,
-    QSizePolicy,
     QMenu,
     QAction,
     QPushButton,
@@ -71,7 +70,7 @@ __dir__ = os.path.dirname(__file__)
 sys.path.append(os.path.join(__dir__, ""))
 
 from paddleocr import PaddleOCR, PPStructure
-from libs.resources import newIcon
+import libs.resources
 from libs.constants import (
     SETTING_ADVANCE_MODE,
     SETTING_DRAW_SQUARE,
@@ -98,6 +97,7 @@ from libs.utils import (
     keysInfo,
     natural_sort,
     newAction,
+    newIcon,
     rebuild_html_from_ppstructure_label,
     stepsInfo,
     struct,
@@ -144,6 +144,7 @@ class MainWindow(QMainWindow):
         self.settings.load()
         settings = self.settings
         self.lang = lang
+        self.gpu = gpu
 
         # Load string bundle for i18n
         if lang not in ["ch", "en"]:
@@ -502,7 +503,7 @@ class MainWindow(QMainWindow):
         save = action(
             getStr("save"),
             self.saveFile,
-            "Ctrl+V",
+            ["Ctrl+V", "end"],
             "verify",
             getStr("saveDetail"),
             enabled=False,
@@ -570,7 +571,7 @@ class MainWindow(QMainWindow):
         delete = action(
             getStr("delBox"),
             self.deleteSelectedShape,
-            "backspace",
+            ["backspace", "delete"],
             "delete",
             getStr("delBoxDetail"),
             enabled=False,
@@ -721,7 +722,7 @@ class MainWindow(QMainWindow):
         createpoly = action(
             getStr("creatPolygon"),
             self.createPolygon,
-            "q",
+            ["q", "home"],
             "new",
             getStr("creatPolygon"),
             enabled=False,
@@ -3181,7 +3182,7 @@ class MainWindow(QMainWindow):
                 use_angle_cls=True,
                 det=True,
                 cls=True,
-                use_gpu=False,
+                use_gpu=self.gpu,
                 lang=choose_lang,
             )
             if choose_lang in ["ch", "en"]:
@@ -3189,7 +3190,7 @@ class MainWindow(QMainWindow):
                     del self.table_ocr
                 self.table_ocr = PPStructure(
                     use_pdserving=False,
-                    use_gpu=False,
+                    use_gpu=self.gpu,
                     lang=choose_lang,
                     layout=False,
                     show_log=False,
