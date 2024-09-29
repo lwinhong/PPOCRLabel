@@ -3,9 +3,6 @@ English | [简体中文](README_ch.md)
 # PPOCRLabelv2
 
 [![PyPI - Version](https://img.shields.io/pypi/v/PPOCRLabel)](https://pypi.org/project/PPOCRLabel/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/PPOCRLabel)](https://pypi.org/project/PPOCRLabel/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dd/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
-[![PyPI - Downloads](https://img.shields.io/pypi/dw/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 [![Downloads](https://static.pepy.tech/badge/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 
@@ -19,8 +16,18 @@ PPOCRLabelv2 is a semi-automatic graphic annotation tool suitable for OCR field,
 
 ### Recent Update
 
-- 2022.05: Add table annotations, follow `2.2 Table Annotations` for more information （by [whjdark](https://github.com/peterh0323); [Evezerest](https://github.com/Evezerest))
-- 2022.02:（by [PeterH0323](https://github.com/peterh0323) ）
+- 2024.09:
+  - Added `Re-recognition` and `Auto Save Unsaved changes` features. For usage details, please refer to the "11. Additional Feature Description" in the "2.1 Operational Steps" section below.
+  - Added the parameter `--img_list_natural_sort`, which defaults to natural sorting for the left image list. After configuring this parameter, character sorting will be used to easily locate images based on character order.
+  - Add 4 custom model parameters:
+    - `det_model_dir`: Path to the detection model directory
+    - `rec_model_dir`: Path to the recognition model directory
+    - `rec_char_dict_path`: Path to the recognition model dictionary file
+    - `cls_model_dir`: Path to the classification model directory
+  - Added the `--bbox_auto_zoom_center` parameter, which can be enabled when there is only one bounding box in the image, automatically centering and zooming in on the bounding box.
+  - Added 5 shortcut keys `z`, `x`, `c`, `v`, `b` for controlling the 4 vertices of the bounding box. For usage details, see the '11. Additional Functionality Description' in "2.1 Operating Procedures" below.
+- 2022.05: Add table annotations, follow `2.2 Table Annotations` for more information (by [whjdark](https://github.com/peterh0323); [Evezerest](https://github.com/Evezerest))
+- 2022.02: (by [PeterH0323](https://github.com/peterh0323))
   - Add KIE Mode by using `--kie`, for [detection + identification + keyword extraction] labeling.
   - Improve user experience: prompt for the number of files and labels, optimize interaction, and fix bugs such as only use CPU when inference
   - New functions: Support using `C` or `X` to rotate box.
@@ -39,8 +46,6 @@ PPOCRLabelv2 is a semi-automatic graphic annotation tool suitable for OCR field,
   - The recognition result scrolls synchronously when users click related detection box.
   - Click to modify the recognition result.(If you can't change the result, please switch to the system default input method, or switch back to the original input method again)
 - 2020.12.18: Support re-recognition of a single label box (by [ninetailskim](https://github.com/ninetailskim) ), perfect shortcut keys.
-
-
 
 ## 1. Installation and Run
 
@@ -86,6 +91,7 @@ PPOCRLabel --kie True # [KIE mode] for [detection + recognition + keyword extrac
 ```
 
 #### MacOS
+
 ```bash
 pip3 install PPOCRLabel
 pip3 install opencv-contrib-python-headless==4.2.0.32
@@ -96,6 +102,7 @@ PPOCRLabel --kie True # [KIE mode] for [detection + recognition + keyword extrac
 ```
 
 #### 1.2.2 Run PPOCRLabel by Python Script
+
 If you modify the PPOCRLabel file (for example, specifying a new built-in model), it will be more convenient to see the results by running the Python script. If you still want to start with the whl package, you need to uninstall the whl package in the current environment and then recompile it according to the next section.
 
 ```bash
@@ -114,6 +121,7 @@ pip3 install -e .
 ```
 
 #### 1.2.4 Pyinstaller build
+
 ```bash
 cd ./PPOCRLabel
 # install pyinstaller
@@ -157,7 +165,18 @@ PPOCRLabel.exe --lang ch
 
 10. Labeling result: the user can export the label result manually through the menu "File - Export Label", while the program will also export automatically if "File - Auto export Label Mode" is selected. The manually checked label will be stored in *Label.txt* under the opened picture folder. Click "File"-"Export Recognition Results" in the menu bar, the recognition training data of such pictures will be saved in the *crop_img* folder, and the recognition label will be saved in *rec_gt.txt*<sup>[4]</sup>.
 
+11. Additional Feature Description
+    - `File` -> `Re-recognition`: After checking, the newly annotated box content will automatically trigger the `Re-recognition` function of the current annotation box, eliminating the need to click the Re-identify button. This is suitable for scenarios where you do not want to use Automatic Annotation but prefer manual annotation, such as license plate recognition. In a single image with only one license plate, using Automatic Annotation would require deleting many additional recognized text boxes, which is less efficient than directly re-annotating.
+    - `File` -> `Auto Save Unsaved changes`: By default, you need to press the `Check` button to complete the marking confirmation for the current box, which can be cumbersome. After checking, when switching to the next image (by pressing the shortcut key `D`), a prompt box asking to confirm whether to save unconfirmed markings will no longer appear. The current markings will be automatically saved and the next image will be switched, making it convenient for quick marking.
+    - After selecting the bounding box, there are 5 shortcut keys available to individually control the movement of the four vertices of the bounding box, suitable for scenarios that require precise control over the positions of the bounding box vertices:
+      - `z`: After pressing, the up, down, left, and right arrow keys will move the 1st vertex individually.
+      - `x`: After pressing, the up, down, left, and right arrow keys will move the 2nd vertex individually.
+      - `c`: After pressing, the up, down, left, and right arrow keys will move the 3rd vertex individually.
+      - `v`: After pressing, the up, down, left, and right arrow keys will move the 4th vertex individually.
+      - `b`: After pressing, the up, down, left, and right arrow keys will revert to the default action of moving the entire bounding box.
+
 ### 2.2 Table Annotation
+
 The table annotation is aimed at extracting the structure of the table in a picture and converting it to Excel format,
 so the annotation needs to be done simultaneously with external software to edit Excel.
 In PPOCRLabel, complete the text information labeling (text and position), complete the table structure information
@@ -206,8 +225,6 @@ labeling in the Excel file, the recommended steps are:
 | Ctrl + Shift + R         | Re-recognize all the labels of the current image |
 | W                        | Create a rect box                                |
 | Q  or  Home              | Create a multi-points box                         |
-| X                        | Rotate the box anti-clockwise                    |
-| C                        | Rotate the box clockwise                         |
 | Ctrl + E                 | Edit label of the selected box                   |
 | Ctrl + X                 | Change key class of the box when enable `--kie`  |
 | Ctrl + R                 | Re-recognize the selected box                    |
@@ -221,6 +238,7 @@ labeling in the Excel file, the recommended steps are:
 | Ctrl++                   | Zoom in                                          |
 | Ctrl--                   | Zoom out                                         |
 | ↑→↓←                     | Move selected box                                |
+| Z, X, C, V, B     | Move the four vertices of the selected bounding box individually|
 
 ### 3.2 Built-in Model
 
@@ -291,8 +309,6 @@ PPOCRLabel supports three ways to export Label.txt
     ```
     pip install opencv-contrib-python-headless==4.2.0.32
     ```
-
-
 
 ### 4. Related
 

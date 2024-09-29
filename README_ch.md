@@ -3,9 +3,6 @@
 # PPOCRLabelv2
 
 [![PyPI - Version](https://img.shields.io/pypi/v/PPOCRLabel)](https://pypi.org/project/PPOCRLabel/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/PPOCRLabel)](https://pypi.org/project/PPOCRLabel/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dd/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
-[![PyPI - Downloads](https://img.shields.io/pypi/dw/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 [![Downloads](https://static.pepy.tech/badge/PPOCRLabel)](https://github.com/PFCCLab/PPOCRLabel)
 
@@ -18,7 +15,18 @@ PPOCRLabel是一款适用于OCR领域的半自动化图形标注工具，内置P
 | <img src="./data/gif/multi-point.gif" width="80%"/> |  <img src="./data/gif/kie.gif" width="100%"/>  |
 
 #### 近期更新
-- 2022.05：**新增表格标注**，使用方法见下方`2.2 表格标注`（by [whjdark](https://github.com/peterh0323); [Evezerest](https://github.com/Evezerest))
+
+- 2024.09:
+  - 新增`自动重新识别`和`自动保存未提交变更`功能，使用方法详见下方`2.1 操作步骤`的`11. 补充功能说明`。
+  - 新增`--img_list_natural_sort`参数，默认左侧图片列表使用自然排序，配置该参数后，将使用字符排序，方便根据字符顺序定位图片。
+  - 新增4个自定义模型的参数：
+    - `det_model_dir` ：检测模型目录路径
+    - `rec_model_dir` ：识别模型目录路径
+    - `rec_char_dict_path` ：识别模型字典文件路径
+    - `cls_model_dir` ：分类模型目录路径
+  - 新增`--bbox_auto_zoom_center`参数，当图片只有一个标记框的时候，可以开启，会自动将标记框居中放大
+  - 新增5个控制标记框4个顶点的快捷键`z`、`x`、`c`、`v`、`b`，使用方法详见下方`2.1 操作步骤`的`11. 补充功能说明`。
+- 2022.05：**新增表格标注**，使用方法见下方`2.2 表格标注`（by [whjdark](https://github.com/peterh0323); [Evezerest](https://github.com/Evezerest)）
 - 2022.02：**新增关键信息标注**、优化标注体验（by [PeterH0323](https://github.com/peterh0323) ）
   - 新增：使用 `--kie` 进入 KIE 功能，用于打【检测+识别+关键字提取】的标签
   - 提升用户体验：新增文件与标记数目提示、优化交互、修复gpu使用等问题。
@@ -29,7 +37,7 @@ PPOCRLabel是一款适用于OCR领域的半自动化图形标注工具，内置P
 - 2021.8.11：
   - 新增功能：打开数据所在文件夹、右键图像旋转90度（注意：旋转前的图片上不能存在标记框，by [Wei-JL](https://github.com/Wei-JL)）
   - 新增快捷键说明（帮助-快捷键）、修复批处理下的方向快捷键移动功能（by [d2623587501](https://github.com/d2623587501)）
-- 2021.2.5：新增批处理与撤销功能（by [Evezerest](https://github.com/Evezerest))
+- 2021.2.5：新增批处理与撤销功能（by [Evezerest](https://github.com/Evezerest)）
   - **批处理功能**：按住Ctrl键选择标记框后可批量移动、复制、删除、重新识别。
   - **撤销功能**：在绘制四点标注框过程中或对框进行编辑操作后，按下Ctrl+Z可撤销上一部操作。
   - 修复图像旋转和尺寸问题、优化编辑标记框过程（by [ninetailskim](https://github.com/ninetailskim)、 [edencfc](https://github.com/edencfc)）
@@ -46,6 +54,7 @@ PPOCRLabel是一款适用于OCR领域的半自动化图形标注工具，内置P
 ## 1. 安装与运行
 
 ### 1.1 安装PaddlePaddle
+
 ```bash
 pip3 install --upgrade pip
 
@@ -129,6 +138,7 @@ PPOCRLabel.exe --lang ch
 ## 2. 使用
 
 ### 2.1 操作步骤
+
 > 如果您只需要标注文字信息和位置，推荐按照以下步骤展开：
 
 1. 安装与运行：使用上述命令安装与运行程序。
@@ -141,8 +151,18 @@ PPOCRLabel.exe --lang ch
 8. **确认标记：点击 “确认”，图片状态切换为 “√”，跳转至下一张。**
 9. 删除：点击 “删除图像”，图片将会被删除至回收站。
 10. 导出结果：用户可以通过菜单中“文件-导出标记结果”手动导出，同时也可以点击“文件 - 自动导出标记结果”开启自动导出。手动确认过的标记将会被存放在所打开图片文件夹下的*Label.txt*中。在菜单栏点击 “文件” - "导出识别结果"后，会将此类图片的识别训练数据保存在*crop_img*文件夹下，识别标签保存在*rec_gt.txt*中<sup>[4]</sup>。
+11. 补充功能说明
+    - `文件` -> `自动重新识别` : 勾选后，对于新标注的框内容会自动触发当前标注框的重新识别功能，不需要再去点击`重新识别`按钮，适合各种原因不想使用`自动标注`只想手动标注的场景，例如车牌识别，一张图里只有一个车牌，如果使用`自动标注`,需要删除很多额外识别出来的文字框，不如直接重新标注
+    - `文件` -> `自动保存未提交变更` : 默认是按`确认`按钮完成当前框的标记确认，有点繁琐，勾选后，切换下一张图（按快捷键`D`）的时候，不再弹出提示框确认是否保存未确认的标记，自动保存当前标记并切换下一张图，方便快速标记
+    - 选中标记框后，5个可以控制标记框四个顶点单独移动的快捷键，适合需要精确控制标记框四个顶点位置的场景
+      - `z` ：按下后，此时使用键盘的上下左右按键将单独移动第1个顶点
+      - `x` ：按下后，此时使用键盘的上下左右按键将单独移动第2个顶点
+      - `c` ：按下后，此时使用键盘的上下左右按键将单独移动第3个顶点
+      - `v` ：按下后，此时使用键盘的上下左右按键将单独移动第4个顶点
+      - `b` ：按下后，此时使用键盘的上下左右按键将恢复默认的整体移动整个标记框
 
 ### 2.2 表格标注（[视频演示](https://www.bilibili.com/video/BV1wR4y1v7JE/?share_source=copy_web&vd_source=cf1f9d24648d49636e3d109c9f9a377d&t=1998)）
+
 表格标注针对表格的结构化提取，将图片中的表格转换为Excel格式，因此标注时需要配合外部软件打开Excel同时完成。在PPOCRLabel软件中完成表格中的文字信息标注（文字与位置）、在Excel文件中完成表格结构信息标注，推荐的步骤为：
 1. 表格识别：打开表格图片后，点击软件右上角 `表格识别` 按钮，软件调用PP-Structure中的表格识别模型，自动为表格打标签，同时弹出Excel
 
@@ -175,8 +195,6 @@ PPOCRLabel.exe --lang ch
 |  rec_gt.txt   | 识别标签。可直接用于PPOCR识别模型训练。需用户手动点击菜单栏“文件” - "导出识别结果"后产生。 |
 |   crop_img    |   识别数据。按照检测框切割后的图片。与rec_gt.txt同时产生。   |
 
-
-
 ## 3. 说明
 
 ### 3.1 快捷键
@@ -186,14 +204,12 @@ PPOCRLabel.exe --lang ch
 | Ctrl + shift + R | 对当前图片的所有标记重新识别                  |
 | W                | 新建矩形框                           |
 | Q  或 Home       | 新建多点框                           |
-| X                | 框逆时针旋转                          |
-| C                | 框顺时针旋转                          |
 | Ctrl + E         | 编辑所选框标签                         |
 | Ctrl + X         |  `--kie` 模式下，修改 Box 的关键字种类 |
 | Ctrl + R         | 重新识别所选标记                        |
 | Ctrl + C         | 【复制并粘贴】选中的标记框                     |
 | Ctrl + 鼠标左键    | 多选标记框                           |
-| Backspace 或 delete    | 删除所选框                           |
+| Backspace 或 Delete    | 删除所选框                           |
 | Ctrl + V 或 End        | 确认本张图片标记                        |
 | Ctrl + Shift + d | 删除本张图片                          |
 | D                | 下一张图片                           |
@@ -201,7 +217,7 @@ PPOCRLabel.exe --lang ch
 | Ctrl++           | 缩小                              |
 | Ctrl--           | 放大                              |
 | ↑→↓←             | 移动标记框                           |
-
+| Z、X、C、V、B     | 对选中的标记框，单独移动四个顶点     |
 
 ### 3.2 内置模型
 
@@ -272,8 +288,6 @@ python gen_ocr_train_val_test.py --trainValTestRatio 6:2:2 --datasetRootPath ../
     ```
     pip install opencv-contrib-python-headless==4.2.0.32
     ```
-
-
 
 ### 4. 参考资料
 
