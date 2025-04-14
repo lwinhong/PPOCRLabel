@@ -71,12 +71,23 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Sign the dists with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v2.1.1
+      uses: sigstore/gh-action-sigstore-python@v3.0.0
       with:
         inputs: >-
           ./dist/*.tar.gz
           ./dist/*.whl
+    - name: Check if GitHub Release exists
+      id: check_release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        if gh release view '${{ github.ref_name }}' --repo '${{ github.repository }}' &>/dev/null; then
+          echo "release_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "release_exists=false" >> $GITHUB_OUTPUT
+        fi
     - name: Create GitHub Release
+      if: steps.check_release.outputs.release_exists == 'false'
       env:
         GITHUB_TOKEN: ${{ github.token }}
       run: >-

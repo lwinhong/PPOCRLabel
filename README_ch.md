@@ -16,6 +16,9 @@ PPOCRLabel是一款适用于OCR领域的半自动化图形标注工具，内置P
 
 #### 近期更新
 
+- 2024.11:
+  - 新增`label_font_path`参数，用来改变标签字体
+  - 新增`selected_shape_color`参数，用来改变选中标签框和字体颜色
 - 2024.09:
   - 新增`自动重新识别`和`自动保存未提交变更`功能，使用方法详见下方`2.1 操作步骤`的`11. 补充功能说明`。
   - 新增`--img_list_natural_sort`参数，默认左侧图片列表使用自然排序，配置该参数后，将使用字符排序，方便根据字符顺序定位图片。
@@ -291,4 +294,5 @@ python gen_ocr_train_val_test.py --trainValTestRatio 6:2:2 --datasetRootPath ../
 
 ### 4. 参考资料
 
-1.[Tzutalin. LabelImg. Git code (2015)](https://github.com/tzutalin/labelImg)
+1. [Tzutalin. LabelImg. Git code (2015)](https://github.com/tzutalin/labelImg)
+2. [PaddleX文本检测/文本识别任务模块数据标注教程](https://paddlepaddle.github.io/PaddleX/latest/data_annotations/ocr_modules/text_detection_recognition.html)

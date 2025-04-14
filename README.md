@@ -16,6 +16,9 @@ PPOCRLabelv2 is a semi-automatic graphic annotation tool suitable for OCR field,
 
 ### Recent Update
 
+- 2024.11:
+  - Add the `label_font_path` parameter to change the font of the label.
+  - Add the `selected_shape_color` parameter to change the color of the selected label box and font.
 - 2024.09:
   - Added `Re-recognition` and `Auto Save Unsaved changes` features. For usage details, please refer to the "11. Additional Feature Description" in the "2.1 Operational Steps" section below.
   - Added the parameter `--img_list_natural_sort`, which defaults to natural sorting for the left image list. After configuring this parameter, character sorting will be used to easily locate images based on character order.
@@ -63,6 +66,8 @@ For more software version requirements, please refer to the instructions in [Ins
 ### 1.2 Install and Run PPOCRLabel
 
 PPOCRLabel can be started in two ways: whl package and Python script. The whl package form is more convenient to start, and the python script to start is convenient for secondary development.
+
+> Note: By default, PPOCRLabel starts with a **Chinese** UI (`--lang ch`). To switch to **English**, you need to launch the application with the `--lang en` parameter.
 
 #### Windows
 
@@ -312,4 +317,5 @@ PPOCRLabel supports three ways to export Label.txt
 
 ### 4. Related
 
-1.[Tzutalin. LabelImg. Git code (2015)](https://github.com/tzutalin/labelImg)
+1. [Tzutalin. LabelImg. Git code (2015)](https://github.com/tzutalin/labelImg)
+2. [PaddleX Text Detection/Text Recognition Task Module Data Annotation Tutorial](https://paddlepaddle.github.io/PaddleX/latest/en/data_annotations/ocr_modules/text_detection_recognition.html)
